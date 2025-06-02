@@ -1,0 +1,25 @@
+.logo-icon{
+  height:32px;
+  width: auto;
+}
+@media (max-width: 1020px) {
+  .search-bar input {
+    display: none;
+  }
+}
+
+    
+    @media (max-width: 1020px) {
+      .search-bar img {
+        position: static;
+        transform: translateY(0px);
+      }
+    }
+
+/* .user-card{
+visibility: hidden;
+
+}
+.user-profile:hover .user-card{
+visibility: visible;
+} */

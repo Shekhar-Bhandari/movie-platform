@@ -1,0 +1,27 @@
+@import "tailwindcss";
+@keyframes scroll-horizontal {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.auto-scroll {
+  animation: scroll-horizontal 30s linear infinite;
+  display: flex;
+  width: max-content;
+}
+
+/* Hide scrollbar cross-browser */
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
+body {
+  overflow-x: hidden;
+}

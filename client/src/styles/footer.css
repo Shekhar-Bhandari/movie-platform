@@ -1,0 +1,7 @@
+@media (max-width : 820px){
+
+  .social-download{
+    flex-direction: column;
+    gap: 2rem;
+  }
+}
