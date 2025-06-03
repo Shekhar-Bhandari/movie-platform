@@ -5,9 +5,14 @@ import HeaderMain from '../components/HeaderMain';
 import TrailerPlayer from '../components/TrailerPlayer';
 import ReviewSection from '../components/Review';
 import '../index.css'
+import axios from 'axios'
+import greenfire from '../images/logos/Greenfire.webp';
+import MovieCarousel from '../components/MovieCarousel';
 const MoviePage = () => {
 
-  
+  const [popular, setPopular] = useState([]);
+  const [topRated, setTopRated] = useState([]);
+  const [newReleases, setNewReleases] = useState([]);
 
   
   const navigate = useNavigate();
@@ -16,7 +21,16 @@ const MoviePage = () => {
   const [cast, setCast] = useState([]);
   const [showTrailer, setShowTrailer] = useState(false);
 
-  
+  useEffect(() => {
+    axios.get('https://movie-platform-1.onrender.com/api/v1/home/movie')
+      .then(res => {
+        const movies = res.data.results;
+        setPopular(movies);
+        setTopRated(movies);
+        setNewReleases(movies);
+      })
+      .catch(err => console.error('Error fetching movies:', err));
+  }, []);
 
   useEffect(() => {
     fetch(`https://movie-platform-1.onrender.com/api/v1/home/movie/${id}`)
@@ -102,7 +116,16 @@ const MoviePage = () => {
           </div>
         </div>
       </div>
-      
+      {/* Movie Carousels */}
+      <div className="pt-8 px-4 md:px-10">
+        <MovieCarousel title="Popular" icon={greenfire} movies={popular} />
+      </div>
+      <div className="pt-8 px-4 md:px-10">
+        <MovieCarousel title="Top Rated" movies={topRated} />
+      </div>
+      <div className="pt-8 px-4 md:px-10">
+        <MovieCarousel title="New Releases" movies={newReleases} />
+      </div>
 
 
       <ReviewSection />
