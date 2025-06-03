@@ -1,0 +1,17 @@
+.env
+# Node.js
+node_modules/
+.env
+dist/
+build/
+
+# Logs
+*.log
+
+# OS/System files
+.DS_Store
+Thumbs.db
+
+# Vercel/Netlify
+.vercel/
+.netlify/
