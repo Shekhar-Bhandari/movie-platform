@@ -12,7 +12,7 @@ const Landing = () => {
   const [newReleases, setNewReleases] = useState([]);
 
   useEffect(() => {
-    axios.get('https://movie-platform-1.onrender.com/api/v1/home/movie')
+    axios.get('http://localhost:8080/api/v1/home/movie')
       .then(res => {
         setPopular(res.data.results);
         setTopRated(res.data.results);      // You can replace this with actual top-rated API
