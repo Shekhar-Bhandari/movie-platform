@@ -8,11 +8,18 @@ const MovieCarousel = ({ title, icon, movies }) => {
   const [showLeftArrow, setShowLeftArrow] = useState(false);
   const [showRightArrow, setShowRightArrow] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
+  const [currentSlide, setCurrentSlide] = useState(0);
 
   // Check if device is mobile
   useEffect(() => {
     const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
+      const mobile = window.innerWidth < 768;
+      setIsMobile(mobile);
+      // Reset slide position on mobile when screen size changes
+      if (mobile && scrollRef.current) {
+        scrollRef.current.scrollLeft = 0;
+        setCurrentSlide(0);
+      }
     };
     
     checkMobile();
@@ -22,7 +29,7 @@ const MovieCarousel = ({ title, icon, movies }) => {
 
   // Dynamic scroll amount based on screen size
   const getScrollAmount = () => {
-    if (window.innerWidth < 640) return 280; // Mobile: ~2 cards
+    if (window.innerWidth < 640) return window.innerWidth * 0.8; // Mobile: ~1.5 cards
     if (window.innerWidth < 1024) return 420; // Tablet: ~3 cards
     return 560; // Desktop: ~4 cards
   };
@@ -30,11 +37,17 @@ const MovieCarousel = ({ title, icon, movies }) => {
   const scrollLeft = () => {
     const scrollAmount = getScrollAmount();
     scrollRef.current?.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+    if (isMobile) {
+      setCurrentSlide(prev => Math.max(0, prev - 1));
+    }
   };
 
   const scrollRight = () => {
     const scrollAmount = getScrollAmount();
     scrollRef.current?.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    if (isMobile) {
+      setCurrentSlide(prev => Math.min(Math.ceil(movies.length / 2) - 1, prev + 1));
+    }
   };
 
   // Update arrow visibility based on scroll position
@@ -43,6 +56,35 @@ const MovieCarousel = ({ title, icon, movies }) => {
       const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
       setShowLeftArrow(scrollLeft > 0);
       setShowRightArrow(scrollLeft < scrollWidth - clientWidth - 10);
+      
+      // Update current slide for mobile
+      if (isMobile) {
+        const slideWidth = clientWidth / 2;
+        const newSlide = Math.round(scrollLeft / slideWidth);
+        setCurrentSlide(newSlide);
+      }
+    }
+  };
+
+  // Handle touch events for better mobile swipe experience
+  const [touchStart, setTouchStart] = useState(0);
+  const [touchEnd, setTouchEnd] = useState(0);
+
+  const handleTouchStart = (e) => {
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchMove = (e) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchEnd = () => {
+    if (touchStart - touchEnd > 50) {
+      // Swipe left
+      scrollRight();
+    } else if (touchEnd - touchStart > 50) {
+      // Swipe right
+      scrollLeft();
     }
   };
 
@@ -50,15 +92,27 @@ const MovieCarousel = ({ title, icon, movies }) => {
     const scrollElement = scrollRef.current;
     if (scrollElement) {
       scrollElement.addEventListener('scroll', handleScroll);
+      scrollElement.addEventListener('touchstart', handleTouchStart);
+      scrollElement.addEventListener('touchmove', handleTouchMove);
+      scrollElement.addEventListener('touchend', handleTouchEnd);
       handleScroll(); // Initial check
-      return () => scrollElement.removeEventListener('scroll', handleScroll);
+      return () => {
+        scrollElement.removeEventListener('scroll', handleScroll);
+        scrollElement.removeEventListener('touchstart', handleTouchStart);
+        scrollElement.removeEventListener('touchmove', handleTouchMove);
+        scrollElement.removeEventListener('touchend', handleTouchEnd);
+      };
     }
-  }, [movies]);
+  }, [movies, isMobile]);
+
+  // Calculate how many cards to show per slide on mobile
+  const mobileCardsPerSlide = 2;
+  const totalMobileSlides = Math.ceil(movies.length / mobileCardsPerSlide);
 
   return (
-    <div className='relative px-2 sm:px-4 py-6 sm:py-10'>
+    <div className='relative px-2 sm:px-4 py-4 sm:py-8'>
       {/* Title Section */}
-      <div className='flex items-center gap-2 pb-3 sm:pb-4 px-2 sm:px-4 lg:pl-10'>
+      <div className='flex items-center gap-2 pb-2 sm:pb-4 px-2 sm:px-4 lg:pl-10'>
         <h2 className='text-lg sm:text-xl lg:text-2xl font-bold text-white'>
           {title}
         </h2>
@@ -88,14 +142,14 @@ const MovieCarousel = ({ title, icon, movies }) => {
         {movies.map((movie) => (
           <div 
             key={movie.id}
-            className='flex-shrink-0 group cursor-pointer'
+            className={`flex-shrink-0 group cursor-pointer ${isMobile ? 'w-[48%]' : ''}`}
           >
             <Link to={`/movie/${movie.id}`} className='block'>
               <div className='relative overflow-hidden rounded-md sm:rounded-lg transition-transform duration-300 group-hover:scale-105'>
                 <img
                   src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
                   alt={movie.title}
-                  className='object-cover w-[120px] h-[180px] sm:w-[140px] sm:h-[210px] lg:w-[160px] lg:h-[240px] xl:w-[180px] xl:h-[270px]'
+                  className={`object-cover ${isMobile ? 'w-full h-auto aspect-[2/3]' : 'w-[140px] h-[210px] lg:w-[160px] lg:h-[240px] xl:w-[180px] xl:h-[270px]'}`}
                   loading='lazy'
                 />
                 
@@ -124,13 +178,25 @@ const MovieCarousel = ({ title, icon, movies }) => {
       )}
 
       {/* Mobile scroll indicator dots */}
-      {isMobile && movies.length > 3 && (
-        <div className='flex justify-center mt-4 gap-1'>
-          {Array.from({ length: Math.ceil(movies.length / 2) }).map((_, index) => (
-            <div
+      {isMobile && totalMobileSlides > 1 && (
+        <div className='flex justify-center mt-3 gap-1.5'>
+          {Array.from({ length: totalMobileSlides }).map((_, index) => (
+            <button
               key={index}
-              className='w-2 h-2 rounded-full bg-gray-600'
-            ></div>
+              onClick={() => {
+                const scrollElement = scrollRef.current;
+                if (scrollElement) {
+                  const slideWidth = scrollElement.clientWidth / mobileCardsPerSlide;
+                  scrollElement.scrollTo({
+                    left: index * slideWidth * mobileCardsPerSlide,
+                    behavior: 'smooth'
+                  });
+                  setCurrentSlide(index);
+                }
+              }}
+              className={`w-2 h-2 rounded-full transition-all ${index === currentSlide ? 'bg-white w-4' : 'bg-gray-600'}`}
+              aria-label={`Go to slide ${index + 1}`}
+            />
           ))}
         </div>
       )}
