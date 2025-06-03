@@ -21,7 +21,7 @@ const CheckOut = () => {
 
   useEffect(() => {
     axios
-      .get('http://localhost:8080/api/v1/home/movie')
+      .get('https://movie-platform-1.onrender.com/api/v1/home/movie')
       .then(res => {
         setPopular(res.data.results);
         setTopRated(res.data.results);      // TODO: Replace with real top-rated API call
@@ -32,7 +32,7 @@ const CheckOut = () => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:8080/api/v1/home/movie/${id}`)
+      .get(`https://movie-platform-1.onrender.com/api/v1/home/movie/${id}`)
       .then(res => setMovie(res.data))
       .catch(err => console.error('Error fetching movie:', err));
   }, [id]);

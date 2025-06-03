@@ -6,7 +6,7 @@ const TrailerPlayer = ({ movieId }) => {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:8080/api/v1/home/video/${movieId}`)
+      .get(`https://movie-platform-1.onrender.com/api/v1/home/video/${movieId}`)
       .then((res) => {
         const trailer = res.data.results.find(
           (vid) => vid.type === "Trailer" && vid.site === "YouTube"

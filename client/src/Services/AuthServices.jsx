@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "http://localhost:8080/api/v1/user";
+const BASE_URL = "https://movie-platform-1.onrender.com/api/v1/user";
 
 const registerUser = (data) => {
   return axios.post(`${BASE_URL}/register`, data);

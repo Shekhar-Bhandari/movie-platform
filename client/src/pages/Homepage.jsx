@@ -10,7 +10,7 @@ const Homepage = () => {
 
   useEffect(() => {
     axios
-      .get('http://localhost:8080/api/v1/home/movie')
+      .get('https://movie-platform-1.onrender.com/api/v1/home/movie')
       .then(res => setMovies(res.data.results))
       .catch(err => console.error('Error fetching movies:', err));
   }, []);
