@@ -11,7 +11,7 @@ export default function HeaderMain() {
         
         {/* Left Section */}
         <div className="flex items-center gap-8 flex-shrink-0">
-          <Link to="/">
+          <Link to="/home">
             <img className="logo-icon w-24 sm:w-28 md:w-32" src={logo} alt="Logo" />
           </Link>
 
