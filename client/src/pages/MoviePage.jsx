@@ -7,6 +7,7 @@ import ReviewSection from '../components/Review';
 import '../index.css'
 import axios from 'axios'
 import greenfire from '../images/logos/Greenfire.webp';
+import MovieCarousel from '../components/MovieCarousel';
 const MoviePage = () => {
 
   const [popular, setPopular] = useState([]);
