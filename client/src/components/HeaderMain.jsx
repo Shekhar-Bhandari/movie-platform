@@ -46,12 +46,14 @@ export default function HeaderMain() {
               alt="Search Icon"
             />
           </div>
+          <div className='pl-100'>
 
           <Link to="/login" className="flex-shrink-0">
-            <button className="btn-primary p-1 rounded hover:bg-stone-800 transition">
+            <button className=" btn-primary p-1 rounded hover:bg-stone-800 transition">
               <img className="h-7 w-7 rounded-full" src={avatar} alt="avatar-icon" />
             </button>
           </Link>
+          </div>
         </div>
       </nav>
     </header>
