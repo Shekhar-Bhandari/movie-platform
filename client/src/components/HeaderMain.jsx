@@ -17,7 +17,7 @@ export default function HeaderMain(){
       <nav className="flex justify-between px-4 sm:px-8 lg:px-24 py-4 items-center">
         {/* Left section */}
         <div className="left-section flex items-center gap-4 sm:gap-8 lg:gap-12">
-          <Link to='/'>
+          <Link to='/home'>
             <img className="logo-icon h-8 w-auto sm:h-10" src={logo} alt="Logo"/>
           </Link>
           
