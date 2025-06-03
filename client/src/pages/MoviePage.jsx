@@ -13,12 +13,12 @@ const MoviePage = () => {
   const [showTrailer, setShowTrailer] = useState(false);
 
   useEffect(() => {
-    fetch(`http://localhost:8080/api/v1/home/movie/${id}`)
+    fetch(`https://movie-platform-1.onrender.com/api/v1/home/movie/${id}`)
       .then(res => res.json())
       .then(data => setMovie(data))
       .catch(err => console.error('Error fetching movie:', err));
 
-    fetch(`http://localhost:8080/api/v1/home/movie/${id}/credits`)
+    fetch(`https://movie-platform-1.onrender.com/api/v1/home/movie/${id}/credits`)
       .then(res => res.json())
       .then(data => setCast(data.cast.slice(0, 5)))
       .catch(err => console.error('Error fetching cast:', err));
