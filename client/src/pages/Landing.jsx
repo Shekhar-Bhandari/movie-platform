@@ -27,7 +27,7 @@ const Landing = () => {
       <HeaderMain />
 
       {/* Responsive Video Section */}
-      <div className="relative w-full" style={{ paddingTop: '56.25%' /* 16:9 aspect ratio */ }}>
+      <div className="pt-50 relative w-full" style={{ paddingTop: '56.25%' /* 16:9 aspect ratio */ }}>
         <iframe
           className="absolute top-0 left-0 w-full h-full object-cover pointer-events-none"
           src="https://www.youtube.com/embed/nulvWqYUM8k?autoplay=1&mute=1&loop=1&playlist=nulvWqYUM8k&controls=0&showinfo=0&modestbranding=1"
